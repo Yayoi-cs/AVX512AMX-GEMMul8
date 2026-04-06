@@ -144,8 +144,12 @@ template <gemmul8::Backend b, typename T> using upperBound_t = typename upperBou
 //==========
 // Number of bits for extraction
 //==========
-#if defined(__HIPCC__) && defined(GPU_ARCH) && (GPU_ARCH_ID(GPU_ARCH) == 940 || GPU_ARCH_ID(GPU_ARCH) == 941 || GPU_ARCH_ID(GPU_ARCH) == 942)
+#if defined(__HIPCC__)
+    #if defined(GPU_ARCH) && (GPU_ARCH_ID(GPU_ARCH) == 940 || GPU_ARCH_ID(GPU_ARCH) == 941 || GPU_ARCH_ID(GPU_ARCH) == 942)
 template <gemmul8::Backend b> inline constexpr int maxUFP = (b == gemmul8::Backend::FP8) ? 6 : 5;
+    #else
+template <gemmul8::Backend b> inline constexpr int maxUFP = (b == gemmul8::Backend::FP8) ? 7 : 5;
+    #endif
 #else
 template <gemmul8::Backend b> inline constexpr int maxUFP = (b == gemmul8::Backend::FP8) ? 7 : 5;
 #endif
