@@ -1,0 +1,33 @@
+# benchmark result on Sapphire Rapids VM on GCP
+# instance: c3-standard-8
+# region: us-central1
+
+```
+tsuneki@amx-test:~/GEMMul8/benchmark$ make
+g++ -O3 -g -std=c++17 -Wall -Wextra -march=native -mtune=native -mamx-tile -mamx-int8 -fopenmp -fno-math-errno -mprefer-vector-width=512 -I../avx-512/include -I../amx/include -I/opt/intel/oneapi/mkl/2026.0/include \
+    -o benchmark benchmark.cpp ../avx-512/lib/libgemmul8_avx512.a ../amx/lib/libgemmul8_amx.a -L/opt/intel/oneapi/mkl/2026.0/lib -Wl,-rpath,/opt/intel/oneapi/mkl/2026.0/lib -lmkl_rt -lpthread -lm -ldl -lm
+tsuneki@amx-test:~/GEMMul8/benchmark$ ./benchmark 
+# iters=128 moduli=14
+# size     backend            time_s       gflops     checksum
+  64       avx512           0.083911        0.800 -9.358513e+00
+  64       amx              0.027369        2.452 -9.358513e+00
+  64       mkl              0.007965        8.426 -9.358513e+00
+  128      avx512           0.093248        5.757 -4.335181e+02
+  128      amx              0.087366        6.145 -4.335181e+02
+  128      mkl              0.003788      141.731 -4.335181e+02
+  256      avx512           0.369751       11.616 1.393990e+02
+  256      amx              0.360983       11.898 1.393990e+02
+  256      mkl              0.019064      225.288 1.393990e+02
+  512      avx512           1.551103       22.152 5.901796e+03
+  512      amx              1.428504       24.053 5.901796e+03
+  512      mkl              0.141325      243.126 5.901796e+03
+  1024     avx512           7.373448       37.279 4.182611e+03
+  1024     amx              6.124268       44.883 4.182611e+03
+  1024     mkl              1.077085      255.205 4.182611e+03
+  2048     avx512          39.744061       55.330 -1.618886e+03
+  2048     amx             30.667485       71.705 -1.618886e+03
+  2048     mkl              8.770560      250.728 -1.618886e+03
+  4096     avx512         242.253623       72.619 -3.790135e+04
+  4096     amx            185.119696       95.031 -3.790135e+04
+  4096     mkl             66.461137      264.699 -3.790135e+04
+```
